@@ -3,7 +3,11 @@ import asyncio
 import pytest
 from store.db.mongo import db_client
 from store.schemas.product import ProductIn, ProductUpdate
-from tests.factories import product_updated_params_factory, product_factory
+from tests.factories import (
+    product_many_factory,
+    product_updated_params_factory,
+    product_factory,
+)
 from uuid import UUID
 from store.usecases.product import product_usecase as usecase
 
@@ -44,6 +48,16 @@ def product_in(product_id):
 @pytest.fixture
 async def product_inserted(product_in):
     return await usecase.create(body=product_in)
+
+
+@pytest.fixture
+def many_products_in():
+    return [ProductIn(**product) for product in product_many_factory()]
+
+
+@pytest.fixture
+async def many_products_inserted(many_products_in):
+    return [await usecase.create(body=product_in) for product_in in many_products_in]
 
 
 @pytest.fixture

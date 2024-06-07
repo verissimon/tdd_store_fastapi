@@ -25,13 +25,11 @@ class ProductUsecase:
 
         return ProductOut(**result)
 
-    async def query(self) -> list[ProductOut]:
+    async def query_find_all(self) -> list[ProductOut]:
         result = self.collection.find()
         return [ProductOut(**product) async for product in result]
 
     async def update(self, id: UUID, body: ProductUpdate) -> ProductOut:
-        # await self.collection.update_one({"id": id}, {"$set": dict(body)})
-        # return await self.get(id=id)
         result = await self.collection.find_one_and_update(
             filter={"id": id},
             update={"$set": body.model_dump(exclude_none=True)},
@@ -39,6 +37,13 @@ class ProductUsecase:
         )
 
         return ProductUpdateOut(**result)
+
+    async def delete(self, id: UUID) -> bool:
+        await self.get(id)  # raises NotFoundException se não existe product com id
+
+        result = await self.collection.delete_one({"id": id})
+
+        return True if result.deleted_count > 0 else False
 
 
 product_usecase = ProductUsecase()

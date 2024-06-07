@@ -4,3 +4,12 @@ def product_factory():
 
 def product_updated_params_factory():
     return {"name": "updated_name", "status": False}
+
+
+def product_many_factory():
+    return [
+        {"name": "test0", "quantity": 12, "price": 10.0, "status": True},
+        {"name": "test1", "quantity": 10, "price": 11.1, "status": True},
+        {"name": "test2", "quantity": 11, "price": 12.2, "status": False},
+        {"name": "test3", "quantity": 13, "price": 13.3, "status": True},
+    ]
