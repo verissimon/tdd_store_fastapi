@@ -1,4 +1,5 @@
 from uuid import UUID
+from fastapi.encoders import decimal_encoder
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 import pymongo
 from store.db.mongo import db_client
@@ -17,8 +18,9 @@ class ProductUsecase:
         product_model = ProductModel(**body.model_dump())
 
         await self.collection.insert_one(product_model.model_dump())
-
-        return ProductOut(**product_model.model_dump())
+        product = ProductOut(**product_model.model_dump())
+        product.price = decimal_encoder(product.price)
+        return product
 
     async def get(self, id: UUID) -> ProductOut:
         result = await self.collection.find_one({"id": id})

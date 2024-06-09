@@ -8,8 +8,22 @@ from tests.factories import (
     product_updated_params_factory,
     product_factory,
 )
+from httpx import AsyncClient
 from uuid import UUID
 from store.usecases.product import product_usecase as usecase
+
+
+@pytest.fixture
+async def client():
+    from store.main import app
+
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        yield ac
+
+
+@pytest.fixture
+def products_url() -> str:
+    return "/products/"
 
 
 @pytest.fixture(scope="session")
