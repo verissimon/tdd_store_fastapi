@@ -8,11 +8,7 @@ class BaseSchemaMixin(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class ValidOutSchemaMixin:
-    id: UUID4 = Field()
-    created_at: datetime = Field()
-    updated_at: datetime = Field()
-
+class Valid:
     @model_validator(mode="before")
     def set_schema(cls, data):
         for key, value in data.items():
@@ -20,3 +16,19 @@ class ValidOutSchemaMixin:
                 data[key] = Decimal(str(value))
 
         return data
+
+
+class UpdateValidator:
+    @model_validator(mode="after")
+    def set_schema(cls, data):
+        for key, value in data.items():
+            if isinstance(value, Decimal):
+                data[key] = str(value)
+
+        return data
+
+
+class ValidOutSchemaMixin(Valid):
+    id: UUID4 = Field()
+    created_at: datetime = Field()
+    updated_at: datetime = Field()

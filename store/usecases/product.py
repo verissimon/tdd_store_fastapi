@@ -38,7 +38,6 @@ class ProductUsecase:
             update={"$set": body.model_dump(exclude_none=True)},
             return_document=pymongo.ReturnDocument.AFTER,
         )
-
         return ProductUpdateOut(**result)
 
     async def delete(self, id: UUID) -> bool:

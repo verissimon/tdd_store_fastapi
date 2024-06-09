@@ -3,7 +3,7 @@ def product_factory():
 
 
 def product_updated_params_factory():
-    return {"name": "updated_name", "status": False}
+    return {"name": "updated_name", "status": False, "price": 10.02}
 
 
 def product_many_factory():
